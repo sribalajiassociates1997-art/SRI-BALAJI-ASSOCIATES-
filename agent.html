@@ -6,14 +6,12 @@
     <title>Sri Balaji Associates | Agent Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         .app-card { max-width: 480px; margin: 0 auto; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans min-h-screen pb-12">
 
-    <!-- App Header -->
     <header class="bg-sky-900 text-white p-4 shadow-md sticky top-0 z-50">
         <div class="max-w-md mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
@@ -30,45 +28,41 @@
     </header>
 
     <main class="p-4">
-        <!-- LOGIN SCREEN -->
         <div id="loginScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-6 space-y-4">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                    <i class="fa-solid fa-user-shield"></i>
+                    <i class="fa-solid fa-user"></i>
                 </div>
-                <h2 class="text-lg font-bold text-slate-800">Employee Authentication</h2>
+                <h2 class="text-lg font-bold text-slate-800">Employee Login</h2>
                 <p class="text-xs text-slate-500">Enter User ID and Passcode to continue</p>
             </div>
             <form onsubmit="handleLogin(event)" class="space-y-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">User ID</label>
-                    <input type="text" id="agentUserId" placeholder="e.g. SBAH01 or SBAA02" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none uppercase">
+                    <input type="text" id="agentUserId" placeholder="Enter User ID" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none uppercase">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Passcode</label>
-                    <input type="password" id="agentPasscode" placeholder="Enter Secure Passcode" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+                    <input type="password" id="agentPasscode" placeholder="Enter Passcode" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
                 </div>
-                <p id="loginError" class="text-xs text-red-500 hidden font-semibold text-center">చెల్లని User ID లేదా Passcode! మళ్లీ ప్రయత్నించండి.</p>
+                <p id="loginError" class="text-xs text-red-500 hidden font-semibold text-center">తప్పు User ID లేదా Passcode! మళ్లీ ప్రయత్నించండి.</p>
                 <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg shadow text-sm transition">
-                    Secure Login
+                    Login
                 </button>
             </form>
         </div>
 
-        <!-- CUSTOMER ENTRY FORM SCREEN -->
         <div id="formScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-2 space-y-4 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
                     <h2 class="text-base font-bold text-slate-800">Customer Loan Application</h2>
                     <p class="text-xs text-slate-500">Logged in as: <strong id="activeUserDisplay" class="text-sky-700 uppercase">---</strong></p>
                 </div>
-                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Authorized</span>
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
             </div>
 
-            <!-- Formspree Endpoint -->
             <form id="loanForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" onsubmit="handleFormSubmit(event)" class="space-y-3">
                 
-                <!-- Hidden input for tracking employee ID in email -->
                 <input type="hidden" name="submitted_by_employee_id" id="submittedByEmployee">
 
                 <div>
@@ -76,20 +70,35 @@
                     <input type="text" name="customer_name" required placeholder="కస్టమర్ పూర్తి పేరు" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
                 </div>
 
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Mobile Number</label>
+                    <input type="tel" name="customer_phone" required placeholder="10 అంకెల ఫోన్ నంబర్" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Email ID</label>
+                    <input type="email" name="customer_email" placeholder="కస్టమర్ ఈమెయిల్ ఐడీ (ఉంటే)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Mobile Number</label>
-                        <input type="tel" name="customer_phone" required placeholder="10 అంకెల ఫోన్ నంబర్" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Aadhaar Number</label>
+                        <input type="text" name="aadhaar_number" maxlength="12" placeholder="12 అంకెల ఆధార్ నంబర్" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Loan Type</label>
-                        <select name="loan_type" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                            <option>Home Loan</option>
-                            <option>Personal Loan</option>
-                            <option>Business Loan</option>
-                            <option>Loan Against Property</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">PAN Card Number</label>
+                        <input type="text" name="pan_number" maxlength="10" placeholder="PAN నంబర్ (ఉదా: ABCDE1234F)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm uppercase">
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Loan Type</label>
+                    <select name="loan_type" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <option>Home Loan</option>
+                        <option>Personal Loan</option>
+                        <option>Business Loan</option>
+                        <option>Loan Against Property</option>
+                    </select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -99,40 +108,29 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Processing Fee (₹)</label>
-                        <input type="number" id="payAmount" name="processing_fee" value="500" required placeholder="రుసుము" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-sky-700">
+                        <input type="number" name="processing_fee" value="500" required placeholder="రుసుము" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-sky-700">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Work / Business Details</label>
-                    <input type="text" name="work_details" placeholder="చేసే ఉద్యోగం / వ్యాపారం" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                    <input type="text" name="work_details" placeholder="చేసే ఉద్యోగం / వ్యాపార వివరాలు" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
                 </div>
 
                 <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-lg shadow text-sm transition">
-                    Submit & Generate Payment QR
+                    Submit Application
                 </button>
             </form>
         </div>
 
-        <!-- PAYMENT QR SCREEN -->
-        <div id="qrScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-2 space-y-4 text-center hidden">
-            <div class="space-y-1">
-                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i> Application Submitted!</span>
-                <h3 class="text-base font-bold text-slate-800 mt-2">Scan & Pay Service Fee</h3>
-                <p class="text-xs text-slate-500">Scan using PhonePe, GPay, Paytm or Any UPI App</p>
+        <div id="successScreen" class="app-card bg-white p-8 rounded-2xl shadow-md border border-slate-200 mt-6 text-center space-y-4 hidden">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                <i class="fa-solid fa-check"></i>
             </div>
+            <h3 class="text-lg font-bold text-slate-800">Application Submitted Successfully!</h3>
+            <p class="text-xs text-slate-500">కస్టమర్ వివరాలు విజయవంతంగా సబ్మిట్ అయ్యాయి మరియు మీ ఈమెయిల్‌కి పంపబడ్డాయి.</p>
 
-            <!-- Dynamic QR Code Container -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 inline-block my-2">
-                <div id="qrcode" class="flex justify-center"></div>
-            </div>
-
-            <div class="bg-sky-50 border border-sky-100 p-3 rounded-xl text-xs space-y-1">
-                <p class="font-bold text-slate-800">Merchant Name: <span class="text-sky-700">Sri Balaji Associates</span></p>
-                <p class="text-slate-600">Amount to Pay: <strong id="qrAmountDisplay" class="text-slate-900">₹500</strong></p>
-            </div>
-
-            <button onclick="resetApp()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 rounded-lg text-xs transition">
+            <button onclick="resetApp()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-lg shadow text-sm transition">
                 + Process Next Application
             </button>
         </div>
@@ -144,9 +142,6 @@
             "SBAH01": "Harish@123",
             "SBAA02": "Anusha@123"
         };
-
-        const BUSINESS_UPI = "9030055448@ybl";
-        const BUSINESS_NAME = "Sri Balaji Associates";
 
         let currentActiveUser = "";
 
@@ -173,7 +168,7 @@
             currentActiveUser = "";
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('formScreen').classList.add('hidden');
-            document.getElementById('qrScreen').classList.add('hidden');
+            document.getElementById('successScreen').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('agentUserId').value = '';
             document.getElementById('agentPasscode').value = '';
@@ -182,38 +177,27 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             const form = document.getElementById('loanForm');
-            const fee = document.getElementById('payAmount').value || "500";
 
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
                 headers: { 'Accept': 'application/json' }
             }).then(() => {
-                showQR(fee);
+                showSuccess();
             }).catch(() => {
-                showQR(fee);
+                showSuccess();
             });
         }
 
-        function showQR(amount) {
+        function showSuccess() {
             document.getElementById('formScreen').classList.add('hidden');
-            document.getElementById('qrScreen').classList.remove('hidden');
-            document.getElementById('qrAmountDisplay').innerText = "₹" + amount;
-
-            const upiUrl = `upi://pay?pa=${BUSINESS_UPI}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${amount}&cu=INR`;
-
-            document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
-                text: upiUrl,
-                width: 180,
-                height: 180
-            });
+            document.getElementById('successScreen').classList.remove('hidden');
         }
 
         function resetApp() {
             document.getElementById('loanForm').reset();
             document.getElementById('submittedByEmployee').value = currentActiveUser;
-            document.getElementById('qrScreen').classList.add('hidden');
+            document.getElementById('successScreen').classList.add('hidden');
             document.getElementById('formScreen').classList.remove('hidden');
         }
     </script>
