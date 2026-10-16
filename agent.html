@@ -21,21 +21,49 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-base leading-tight">Sri Balaji Associates</h1>
-                    <p class="text-[10px] text-sky-200">Agent Portal & Loan Services</p>
+                    <p class="text-[10px] text-sky-200">Employee Portal</p>
                 </div>
             </div>
-            <button onclick="logout()" id="logoutBtn" class="text-sky-200 hover:text-white text-sm">
+            <button onclick="logout()" id="logoutBtn" class="text-sky-200 hover:text-white text-sm hidden">
                 <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
             </button>
         </div>
     </header>
 
     <main class="p-4">
-        <!-- Step 1: Form Details Section -->
-        <div id="formSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6">
-            <div class="border-b pb-3">
-                <h2 class="text-lg font-bold text-slate-800">Loan Application Form</h2>
-                <p class="text-xs text-slate-500">Please fill in applicant and co-applicant details accurately.</p>
+        <!-- Page 1: Employee Login Screen -->
+        <div id="loginScreen" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <h2 class="text-lg font-bold text-slate-800">Employee Login</h2>
+                <p class="text-xs text-slate-500">Enter your employee ID and password to continue</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Employee ID</label>
+                    <input type="text" id="empId" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter Employee ID">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Password</label>
+                    <input type="password" id="empPassword" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter Password">
+                </div>
+                <button type="submit" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
+                    Login <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Page 2: Loan Application Form -->
+        <div id="formSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
+            <div class="border-b pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Loan Application Form</h2>
+                    <p class="text-xs text-slate-500">Fill in applicant and co-applicant details.</p>
+                </div>
+                <span id="loggedEmpDisplay" class="text-xs bg-sky-50 text-sky-800 px-2 py-1 rounded font-medium"></span>
             </div>
 
             <form id="loanForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
@@ -104,7 +132,6 @@
                 <!-- Upload Sections -->
                 <div class="space-y-2 border-t pt-3">
                     <h3 class="font-semibold text-sm text-slate-800">Document Uploads</h3>
-                    
                     <div class="grid grid-cols-1 gap-2 text-xs">
                         <label class="block font-medium text-slate-600">Applicant Aadhaar & PAN Upload</label>
                         <input type="file" required class="border p-2 rounded-lg bg-white">
@@ -130,19 +157,21 @@
                 </div>
 
                 <button type="submit" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
-                    Proceed to Payment <i class="fa-solid fa-arrow-right ml-1"></i>
+                    Submit & Proceed to Payment Details <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
         </div>
 
-        <!-- Step 2: Payment Gateway Details (Hidden by default) -->
-        <div id="paymentSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
+        <!-- Page 3: Payment Details & Corrections Preview -->
+        <div id="paymentDetailsSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">Payment Gateway</h2>
-                    <p class="text-xs text-slate-500">Complete processing fee payment</p>
+                    <h2 class="text-lg font-bold text-slate-800">Payment & Fee Breakdown</h2>
+                    <p class="text-xs text-slate-500">Review details before generating payment QR</p>
                 </div>
-                <button onclick="goBackToForm()" class="text-xs text-sky-600 underline">Edit Details</button>
+                <button onclick="goBackToForm()" class="text-xs text-sky-600 font-medium underline">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Make Corrections
+                </button>
             </div>
 
             <!-- Fee Breakdown Table -->
@@ -179,11 +208,25 @@
                 </div>
             </div>
 
+            <button onclick="proceedToQR()" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
+                Continue to Generate QR Code <i class="fa-solid fa-qrcode ml-1"></i>
+            </button>
+        </div>
+
+        <!-- Page 4: UPI QR Code Payment Screen -->
+        <div id="qrSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
+            <div class="border-b pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Scan & Pay</h2>
+                    <p class="text-xs text-slate-500">Complete payment via UPI scanner</p>
+                </div>
+                <button onclick="backToPaymentDetails()" class="text-xs text-sky-600 underline">Back</button>
+            </div>
+
             <!-- Dynamic Payment Scanner -->
             <div class="text-center space-y-3 bg-sky-50 p-4 rounded-lg border border-sky-100">
                 <p class="text-xs font-medium text-slate-700">Scan QR Code to Pay via any UPI App</p>
                 <div class="inline-block bg-white p-3 rounded-lg shadow-sm">
-                    <!-- Placeholder QR Image utilizing UPI link -->
                     <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9030055448@ybl&am=24188.82&tn=SriBalajiAssociatesLoanProcessing" alt="UPI QR Code" class="mx-auto w-36 h-36">
                 </div>
                 <div class="text-xs font-bold text-slate-800">
@@ -196,7 +239,7 @@
             </button>
         </div>
 
-        <!-- Step 3: Success Screen (Hidden by default) -->
+        <!-- Success Screen -->
         <div id="successSection" class="app-card bg-white p-8 rounded-xl shadow-md text-center space-y-4 hidden">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-circle-check"></i>
@@ -211,30 +254,53 @@
 
     <script>
         let customerNameStored = "";
+        let loggedInEmp = "";
+
+        function handleLogin(event) {
+            event.preventDefault();
+            loggedInEmp = document.getElementById('empId').value;
+            
+            document.getElementById('loggedEmpDisplay').innerText = `Emp: ${loggedInEmp}`;
+            
+            // Switch to Form Section (Page 2)
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
 
         function handleFormSubmit(event) {
             event.preventDefault();
             customerNameStored = document.getElementById('appName').value;
             
-            // Switch from Form to Payment Section
+            // Switch from Form to Payment Details Preview (Page 3)
             document.getElementById('formSection').classList.add('hidden');
-            document.getElementById('paymentSection').classList.remove('hidden');
+            document.getElementById('paymentDetailsSection').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
 
         function goBackToForm() {
-            document.getElementById('paymentSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
             document.getElementById('formSection').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
 
+        function proceedToQR() {
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
+            document.getElementById('qrSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function backToPaymentDetails() {
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
         function simulatePaymentSuccess() {
-            // Update success message text dynamically
-            document.getElementById('successMessageinnerText', 'Login Completed - ' + customerNameStored);
             document.getElementById('successMessage').innerText = `Login Completed - ${customerNameStored}`;
             
-            // Switch from Payment to Success Section
-            document.getElementById('paymentSection').classList.add('hidden');
+            document.getElementById('qrSection').classList.add('hidden');
             document.getElementById('successSection').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
@@ -246,9 +312,14 @@
 
         function resetPortal() {
             document.getElementById('loanForm').reset();
+            document.getElementById('empId').value = "";
+            document.getElementById('empPassword').value = "";
             document.getElementById('successSection').classList.add('hidden');
-            document.getElementById('paymentSection').classList.add('hidden');
-            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
             window.scrollTo(0, 0);
         }
     </script>
