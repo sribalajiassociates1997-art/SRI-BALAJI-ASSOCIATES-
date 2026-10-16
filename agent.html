@@ -6,7 +6,6 @@
     <title>Sri Balaji Associates | Agent Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QRCode JS Library for generating dynamic QR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         .app-card { max-width: 480px; margin: 0 auto; }
@@ -35,19 +34,23 @@
         <div id="loginScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-6 space-y-4">
             <div class="text-center space-y-1">
                 <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                    <i class="fa-solid fa-user-lock"></i>
+                    <i class="fa-solid fa-user-shield"></i>
                 </div>
-                <h2 class="text-lg font-bold text-slate-800">Agent Login</h2>
-                <p class="text-xs text-slate-500">Enter access key to continue</p>
+                <h2 class="text-lg font-bold text-slate-800">Employee Authentication</h2>
+                <p class="text-xs text-slate-500">Enter User ID and Passcode to continue</p>
             </div>
             <form onsubmit="handleLogin(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Passcode</label>
-                    <input type="password" id="agentPasscode" placeholder="Enter Agent Passcode" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">User ID</label>
+                    <input type="text" id="agentUserId" placeholder="e.g. SBAH01 or SBAA02" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none uppercase">
                 </div>
-                <p id="loginError" class="text-xs text-red-500 hidden font-semibold text-center">ఇచ్చిన పాస్‌వర్డ్ తప్పు! దయచేసి మళ్లీ ప్రయత్నించండి.</p>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Passcode</label>
+                    <input type="password" id="agentPasscode" placeholder="Enter Secure Passcode" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+                </div>
+                <p id="loginError" class="text-xs text-red-500 hidden font-semibold text-center">చెల్లని User ID లేదా Passcode! మళ్లీ ప్రయత్నించండి.</p>
                 <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg shadow text-sm transition">
-                    Login to Portal
+                    Secure Login
                 </button>
             </form>
         </div>
@@ -56,15 +59,18 @@
         <div id="formScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-2 space-y-4 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
-                    <h2 class="text-base font-bold text-slate-800">Customer Loan Entry</h2>
-                    <p class="text-xs text-slate-500">Fill details and generate payment QR</p>
+                    <h2 class="text-base font-bold text-slate-800">Customer Loan Application</h2>
+                    <p class="text-xs text-slate-500">Logged in as: <strong id="activeUserDisplay" class="text-sky-700 uppercase">---</strong></p>
                 </div>
-                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Agent Active</span>
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Authorized</span>
             </div>
 
-            <!-- Replace YOUR_FORMSPREE_ID with your Formspree ID -->
+            <!-- Formspree Endpoint -->
             <form id="loanForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" onsubmit="handleFormSubmit(event)" class="space-y-3">
                 
+                <!-- Hidden input for tracking employee ID in email -->
+                <input type="hidden" name="submitted_by_employee_id" id="submittedByEmployee">
+
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Customer Full Name</label>
                     <input type="text" name="customer_name" required placeholder="కస్టమర్ పూర్తి పేరు" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
@@ -111,9 +117,9 @@
         <!-- PAYMENT QR SCREEN -->
         <div id="qrScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-2 space-y-4 text-center hidden">
             <div class="space-y-1">
-                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i> Data Submitted & Mailed!</span>
-                <h3 class="text-base font-bold text-slate-800 mt-2">Scan & Pay Fee</h3>
-                <p class="text-xs text-slate-500">Scan via PhonePe, GPay, Paytm or Any UPI App</p>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i> Application Submitted!</span>
+                <h3 class="text-base font-bold text-slate-800 mt-2">Scan & Pay Service Fee</h3>
+                <p class="text-xs text-slate-500">Scan using PhonePe, GPay, Paytm or Any UPI App</p>
             </div>
 
             <!-- Dynamic QR Code Container -->
@@ -122,28 +128,38 @@
             </div>
 
             <div class="bg-sky-50 border border-sky-100 p-3 rounded-xl text-xs space-y-1">
-                <p class="font-bold text-slate-800">Payee: <span class="text-sky-700">Sri Balaji Associates</span></p>
+                <p class="font-bold text-slate-800">Merchant Name: <span class="text-sky-700">Sri Balaji Associates</span></p>
                 <p class="text-slate-600">Amount to Pay: <strong id="qrAmountDisplay" class="text-slate-900">₹500</strong></p>
             </div>
 
             <button onclick="resetApp()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 rounded-lg text-xs transition">
-                + Enter Next Customer
+                + Process Next Application
             </button>
         </div>
     </main>
 
     <script>
-        // 1. Passcode Configuration (మీరు మార్చుకోగలిగే పాస్‌వర్డ్)
-        const DEFAULT_PASS = "SBA2026"; 
+        // Authorized Employee Directory
+        const EMPLOYEES = {
+            "SBAH01": "Harish@123",
+            "SBAA02": "Anusha@123"
+        };
 
-        // 2. మీ UPI ID వివరాలు (ఇక్కడ మీ PhonePe / GPay Business UPI ID ఇవ్వండి)
-        const BUSINESS_UPI = "9030055448@ybl"; // మీ UPI ID
+        const BUSINESS_UPI = "9030055448@ybl";
         const BUSINESS_NAME = "Sri Balaji Associates";
+
+        let currentActiveUser = "";
 
         function handleLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById('agentPasscode').value;
-            if(pass === DEFAULT_PASS) {
+            const user = document.getElementById('agentUserId').value.trim().toUpperCase();
+            const pass = document.getElementById('agentPasscode').value.trim();
+
+            if (EMPLOYEES[user] && EMPLOYEES[user] === pass) {
+                currentActiveUser = user;
+                document.getElementById('activeUserDisplay').innerText = user;
+                document.getElementById('submittedByEmployee').value = user;
+
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('formScreen').classList.remove('hidden');
                 document.getElementById('logoutBtn').classList.remove('hidden');
@@ -154,10 +170,12 @@
         }
 
         function logout() {
+            currentActiveUser = "";
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('formScreen').classList.add('hidden');
             document.getElementById('qrScreen').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('agentUserId').value = '';
             document.getElementById('agentPasscode').value = '';
         }
 
@@ -166,7 +184,6 @@
             const form = document.getElementById('loanForm');
             const fee = document.getElementById('payAmount').value || "500";
 
-            // Submit data to Formspree email service
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
@@ -174,7 +191,7 @@
             }).then(() => {
                 showQR(fee);
             }).catch(() => {
-                showQR(fee); // Show QR even if offline/fallback
+                showQR(fee);
             });
         }
 
@@ -183,10 +200,8 @@
             document.getElementById('qrScreen').classList.remove('hidden');
             document.getElementById('qrAmountDisplay').innerText = "₹" + amount;
 
-            // Generate UPI String
             const upiUrl = `upi://pay?pa=${BUSINESS_UPI}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${amount}&cu=INR`;
 
-            // Clear existing QR & generate new
             document.getElementById("qrcode").innerHTML = "";
             new QRCode(document.getElementById("qrcode"), {
                 text: upiUrl,
@@ -197,6 +212,7 @@
 
         function resetApp() {
             document.getElementById('loanForm').reset();
+            document.getElementById('submittedByEmployee').value = currentActiveUser;
             document.getElementById('qrScreen').classList.add('hidden');
             document.getElementById('formScreen').classList.remove('hidden');
         }
