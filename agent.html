@@ -12,193 +12,244 @@
 </head>
 <body class="bg-slate-100 font-sans min-h-screen pb-12">
 
+    <!-- Header -->
     <header class="bg-sky-900 text-white p-4 shadow-md sticky top-0 z-50">
         <div class="max-w-md mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <div class="bg-sky-600 text-white font-bold px-2.5 py-1 rounded-lg text-sm">SBA</div>
+                <div class="bg-sky-600 text-white font-bold p-2 rounded-lg">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
                 <div>
                     <h1 class="font-bold text-base leading-tight">Sri Balaji Associates</h1>
-                    <p class="text-[10px] text-sky-200">Employee & Agent Portal</p>
+                    <p class="text-[10px] text-sky-200">Agent Portal & Loan Services</p>
                 </div>
             </div>
-            <button onclick="logout()" id="logoutBtn" class="hidden text-xs bg-slate-800 border border-slate-700 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-200">
+            <button onclick="logout()" id="logoutBtn" class="text-sky-200 hover:text-white text-sm">
                 <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
             </button>
         </div>
     </header>
 
     <main class="p-4">
-        <div id="loginScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-6 space-y-4">
-            <div class="text-center space-y-1">
-                <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <h2 class="text-lg font-bold text-slate-800">Employee Login</h2>
-                <p class="text-xs text-slate-500">Enter User ID and Passcode to continue</p>
-            </div>
-            <form onsubmit="handleLogin(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">User ID</label>
-                    <input type="text" id="agentUserId" placeholder="Enter User ID" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none uppercase">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Passcode</label>
-                    <input type="password" id="agentPasscode" placeholder="Enter Passcode" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
-                </div>
-                <p id="loginError" class="text-xs text-red-500 hidden font-semibold text-center">తప్పు User ID లేదా Passcode! మళ్లీ ప్రయత్నించండి.</p>
-                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-lg shadow text-sm transition">
-                    Login
-                </button>
-            </form>
-        </div>
-
-        <div id="formScreen" class="app-card bg-white p-6 rounded-2xl shadow-md border border-slate-200 mt-2 space-y-4 hidden">
-            <div class="border-b pb-3 flex justify-between items-center">
-                <div>
-                    <h2 class="text-base font-bold text-slate-800">Customer Loan Application</h2>
-                    <p class="text-xs text-slate-500">Logged in as: <strong id="activeUserDisplay" class="text-sky-700 uppercase">---</strong></p>
-                </div>
-                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
+        <!-- Step 1: Form Details Section -->
+        <div id="formSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6">
+            <div class="border-b pb-3">
+                <h2 class="text-lg font-bold text-slate-800">Loan Application Form</h2>
+                <p class="text-xs text-slate-500">Please fill in applicant and co-applicant details accurately.</p>
             </div>
 
-            <form id="loanForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" onsubmit="handleFormSubmit(event)" class="space-y-3">
-                
-                <input type="hidden" name="submitted_by_employee_id" id="submittedByEmployee">
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Customer Full Name</label>
-                    <input type="text" name="customer_name" required placeholder="కస్టమర్ పూర్తి పేరు" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Mobile Number</label>
-                    <input type="tel" name="customer_phone" required placeholder="10 అంకెల ఫోన్ నంబర్" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Email ID</label>
-                    <input type="email" name="customer_email" placeholder="కస్టమర్ ఈమెయిల్ ఐడీ (ఉంటే)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
+            <form id="loanForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <!-- Applicant Details -->
+                <div class="bg-slate-50 p-4 rounded-lg space-y-3">
+                    <h3 class="font-semibold text-sm text-sky-900"><i class="fa-solid fa-user mr-1"></i> Applicant Details</h3>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Aadhaar Number</label>
-                        <input type="text" name="aadhaar_number" maxlength="12" placeholder="12 అంకెల ఆధార్ నంబర్" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Applicant Name</label>
+                        <input type="text" id="appName" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter full name">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">PAN Card Number</label>
-                        <input type="text" name="pan_number" maxlength="10" placeholder="PAN నంబర్ (ఉదా: ABCDE1234F)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm uppercase">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Applicant Aadhaar Number</label>
+                        <input type="text" id="appAadhaar" required maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="XXXX-XXXX-XXXX">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Applicant PAN</label>
+                        <input type="text" id="appPan" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none uppercase" placeholder="ABCDE1234F">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Date of Birth</label>
+                        <input type="date" id="appDob" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
                     </div>
                 </div>
 
+                <!-- Co-Applicant Details -->
+                <div class="bg-slate-50 p-4 rounded-lg space-y-3">
+                    <h3 class="font-semibold text-sm text-sky-900"><i class="fa-solid fa-user-group mr-1"></i> Co-Applicant Details</h3>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Co-Applicant Name</label>
+                        <input type="text" id="coAppName" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter co-applicant name">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Co-Applicant Aadhaar Number</label>
+                        <input type="text" id="coAppAadhaar" maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="XXXX-XXXX-XXXX">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Co-Applicant PAN</label>
+                        <input type="text" id="coAppPan" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none uppercase" placeholder="ABCDE1234F">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Date of Birth</label>
+                        <input type="date" id="coAppDob" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Loan Type Dropdown -->
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Loan Type</label>
-                    <select name="loan_type" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                        <option>Home Loan</option>
-                        <option>Personal Loan</option>
-                        <option>Business Loan</option>
-                        <option>Loan Against Property</option>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Loan Type</label>
+                    <select id="loanType" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none bg-white">
+                        <option value="">Select Loan Type</option>
+                        <option value="Construction Loan">Construction Loan</option>
+                        <option value="Project Loan (Builders)">Project Loan (Builders)</option>
+                        <option value="Loan Against Property">Loan Against Property</option>
+                        <option value="Balance Transfer">Balance Transfer</option>
+                        <option value="Top-Up Loan">Top-Up Loan</option>
+                        <option value="Purchase Loan">Purchase Loan</option>
+                        <option value="Vendor BT Loan">Vendor BT Loan</option>
+                        <option value="Open Plot Loan">Open Plot Loan</option>
+                        <option value="Agriculture Land Mortgage Loan">Agriculture Land Mortgage Loan</option>
+                        <option value="Personal Loan">Personal Loan</option>
+                        <option value="Business Loan">Business Loan</option>
+                        <option value="Education Loan">Education Loan</option>
                     </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Required Amount (₹)</label>
-                        <input type="number" name="loan_amount" required placeholder="ఉదా: 500000" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Processing Fee (₹)</label>
-                        <input type="number" name="processing_fee" value="500" required placeholder="రుసుము" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-sky-700">
+                <!-- Upload Sections -->
+                <div class="space-y-2 border-t pt-3">
+                    <h3 class="font-semibold text-sm text-slate-800">Document Uploads</h3>
+                    
+                    <div class="grid grid-cols-1 gap-2 text-xs">
+                        <label class="block font-medium text-slate-600">Applicant Aadhaar & PAN Upload</label>
+                        <input type="file" required class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Co-Applicant Aadhaar & PAN Upload</label>
+                        <input type="file" class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Applicant Bank Statement Upload</label>
+                        <input type="file" required class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Co-Applicant Bank Statement Upload (Optional)</label>
+                        <input type="file" class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Property Documents Upload</label>
+                        <input type="file" class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Property House Tax Upload</label>
+                        <input type="file" class="border p-2 rounded-lg bg-white">
+
+                        <label class="block font-medium text-slate-600 mt-1">Power Bill Upload</label>
+                        <input type="file" class="border p-2 rounded-lg bg-white">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Work / Business Details</label>
-                    <input type="text" name="work_details" placeholder="చేసే ఉద్యోగం / వ్యాపార వివరాలు" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm">
-                </div>
-
-                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-lg shadow text-sm transition">
-                    Submit Application
+                <button type="submit" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
+                    Proceed to Payment <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
         </div>
 
-        <div id="successScreen" class="app-card bg-white p-8 rounded-2xl shadow-md border border-slate-200 mt-6 text-center space-y-4 hidden">
-            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
-                <i class="fa-solid fa-check"></i>
+        <!-- Step 2: Payment Gateway Details (Hidden by default) -->
+        <div id="paymentSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
+            <div class="border-b pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Payment Gateway</h2>
+                    <p class="text-xs text-slate-500">Complete processing fee payment</p>
+                </div>
+                <button onclick="goBackToForm()" class="text-xs text-sky-600 underline">Edit Details</button>
             </div>
-            <h3 class="text-lg font-bold text-slate-800">Application Submitted Successfully!</h3>
-            <p class="text-xs text-slate-500">కస్టమర్ వివరాలు విజయవంతంగా సబ్మిట్ అయ్యాయి మరియు మీ ఈమెయిల్‌కి పంపబడ్డాయి.</p>
 
-            <button onclick="resetApp()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-lg shadow text-sm transition">
-                + Process Next Application
+            <!-- Fee Breakdown Table -->
+            <div class="bg-slate-50 p-4 rounded-lg space-y-2 text-sm">
+                <div class="flex justify-between text-slate-600">
+                    <span>LOGIN Fee</span>
+                    <span>₹4,999.00</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                    <span>Technical Fee</span>
+                    <span>₹4,500.00</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                    <span>Legal Fee</span>
+                    <span>₹4,500.00</span>
+                </div>
+                <div class="flex justify-between text-slate-600">
+                    <span>Franking Charges</span>
+                    <span>₹6,500.00</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex justify-between font-semibold text-slate-800">
+                    <span>Subtotal</span>
+                    <span>₹20,499.00</span>
+                </div>
+                <div class="flex justify-between text-slate-600 text-xs">
+                    <span>GST (18%)</span>
+                    <span>₹3,689.82</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex justify-between font-bold text-base text-sky-900">
+                    <span>Total Payable Amount</span>
+                    <span>₹24,188.82</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Payment Scanner -->
+            <div class="text-center space-y-3 bg-sky-50 p-4 rounded-lg border border-sky-100">
+                <p class="text-xs font-medium text-slate-700">Scan QR Code to Pay via any UPI App</p>
+                <div class="inline-block bg-white p-3 rounded-lg shadow-sm">
+                    <!-- Placeholder QR Image utilizing UPI link -->
+                    <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9030055448@ybl&am=24188.82&tn=SriBalajiAssociatesLoanProcessing" alt="UPI QR Code" class="mx-auto w-36 h-36">
+                </div>
+                <div class="text-xs font-bold text-slate-800">
+                    UPI ID: <span class="text-sky-700 select-all">9030055448@ybl</span>
+                </div>
+            </div>
+
+            <button onclick="simulatePaymentSuccess()" class="w-full bg-emerald-600 text-white font-semibold py-3 rounded-lg hover:bg-emerald-700 transition duration-200">
+                <i class="fa-solid fa-check-circle mr-1"></i> Confirm Payment & Complete
+            </button>
+        </div>
+
+        <!-- Step 3: Success Screen (Hidden by default) -->
+        <div id="successSection" class="app-card bg-white p-8 rounded-xl shadow-md text-center space-y-4 hidden">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2 id="successMessage" class="text-xl font-bold text-slate-800">Login Completed - Customer Name</h2>
+            <p class="text-xs text-slate-500">Your application has been successfully submitted and payment verified.</p>
+            <button onclick="resetPortal()" class="mt-4 bg-sky-700 text-white text-sm font-semibold py-2.5 px-6 rounded-lg hover:bg-sky-800">
+                New Application
             </button>
         </div>
     </main>
 
     <script>
-        // Authorized Employee Directory
-        const EMPLOYEES = {
-            "SBAH01": "Harish@123",
-            "SBAA02": "Anusha@123"
-        };
+        let customerNameStored = "";
 
-        let currentActiveUser = "";
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            customerNameStored = document.getElementById('appName').value;
+            
+            // Switch from Form to Payment Section
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('paymentSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('agentUserId').value.trim().toUpperCase();
-            const pass = document.getElementById('agentPasscode').value.trim();
+        function goBackToForm() {
+            document.getElementById('paymentSection').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
 
-            if (EMPLOYEES[user] && EMPLOYEES[user] === pass) {
-                currentActiveUser = user;
-                document.getElementById('activeUserDisplay').innerText = user;
-                document.getElementById('submittedByEmployee').value = user;
-
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('formScreen').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('loginError').classList.add('hidden');
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
-            }
+        function simulatePaymentSuccess() {
+            // Update success message text dynamically
+            document.getElementById('successMessageinnerText', 'Login Completed - ' + customerNameStored);
+            document.getElementById('successMessage').innerText = `Login Completed - ${customerNameStored}`;
+            
+            // Switch from Payment to Success Section
+            document.getElementById('paymentSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
         }
 
         function logout() {
-            currentActiveUser = "";
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('formScreen').classList.add('hidden');
-            document.getElementById('successScreen').classList.add('hidden');
-            document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('agentUserId').value = '';
-            document.getElementById('agentPasscode').value = '';
+            alert("Logged out successfully.");
+            resetPortal();
         }
 
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const form = document.getElementById('loanForm');
-
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-            }).then(() => {
-                showSuccess();
-            }).catch(() => {
-                showSuccess();
-            });
-        }
-
-        function showSuccess() {
-            document.getElementById('formScreen').classList.add('hidden');
-            document.getElementById('successScreen').classList.remove('hidden');
-        }
-
-        function resetApp() {
+        function resetPortal() {
             document.getElementById('loanForm').reset();
-            document.getElementById('submittedByEmployee').value = currentActiveUser;
-            document.getElementById('successScreen').classList.add('hidden');
-            document.getElementById('formScreen').classList.remove('hidden');
+            document.getElementById('successSection').classList.add('hidden');
+            document.getElementById('paymentSection').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
