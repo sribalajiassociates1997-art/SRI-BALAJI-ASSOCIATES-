@@ -41,10 +41,10 @@
                 <p class="text-xs text-slate-500">Enter your employee ID and password to continue</p>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="space-y-4">
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1">Employee ID</label>
-                    <input type="text" id="empId" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter Employee ID">
+                    <input type="text" id="empId" required class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 uppercase outline-none" placeholder="e.g. SBAH01">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1">Password</label>
@@ -66,7 +66,7 @@
                 <span id="loggedEmpDisplay" class="text-xs bg-sky-50 text-sky-800 px-2 py-1 rounded font-medium"></span>
             </div>
 
-            <!-- Formspree Integration with your ID -->
+            <!-- Formspree Integration -->
             <form id="loanForm" action="https://formspree.io/f/maeqadkd" method="POST" onsubmit="handleFormSubmit(event)" class="space-y-4">
                 
                 <!-- Hidden input to track which employee submitted -->
@@ -170,4 +170,158 @@
                     <span>Franking Charges</span>
                     <span>₹6,500.00</span>
                 </div>
-                <hr
+                <hr class="my-1">
+                <div class="flex justify-between font-semibold text-slate-800">
+                    <span>Subtotal</span>
+                    <span>₹20,499.00</span>
+                </div>
+                <div class="flex justify-between text-slate-600 text-xs">
+                    <span>GST (18%)</span>
+                    <span>₹3,689.82</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex justify-between font-bold text-base text-sky-900">
+                    <span>Total Payable Amount</span>
+                    <span>₹24,188.82</span>
+                </div>
+            </div>
+
+            <button onclick="proceedToQR()" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
+                Continue to Generate QR Code <i class="fa-solid fa-qrcode ml-1"></i>
+            </button>
+        </div>
+
+        <!-- Page 4: UPI QR Code Payment Screen -->
+        <div id="qrSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
+            <div class="border-b pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800">Scan & Pay</h2>
+                    <p class="text-xs text-slate-500">Complete payment via UPI scanner</p>
+                </div>
+                <button onclick="backToPaymentDetails()" class="text-xs text-sky-600 underline">Back</button>
+            </div>
+
+            <!-- Dynamic Payment Scanner -->
+            <div class="text-center space-y-3 bg-sky-50 p-4 rounded-lg border border-sky-100">
+                <p class="text-xs font-medium text-slate-700">Scan QR Code to Pay via any UPI App</p>
+                <div class="inline-block bg-white p-3 rounded-lg shadow-sm">
+                    <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9030055448@ybl&am=24188.82&tn=SriBalajiAssociatesLoanProcessing" alt="UPI QR Code" class="mx-auto w-36 h-36">
+                </div>
+                <div class="text-xs font-bold text-slate-800">
+                    UPI ID: <span class="text-sky-700 select-all">9030055448@ybl</span>
+                </div>
+            </div>
+
+            <button onclick="simulatePaymentSuccess()" class="w-full bg-emerald-600 text-white font-semibold py-3 rounded-lg hover:bg-emerald-700 transition duration-200">
+                <i class="fa-solid fa-check-circle mr-1"></i> Confirm Payment & Complete
+            </button>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="successSection" class="app-card bg-white p-8 rounded-xl shadow-md text-center space-y-4 hidden">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2 id="successMessage" class="text-xl font-bold text-slate-800">Login Completed - Customer Name</h2>
+            <p class="text-xs text-slate-500">Your application has been successfully submitted and payment verified.</p>
+            <button onclick="resetPortal()" class="mt-4 bg-sky-700 text-white text-sm font-semibold py-2.5 px-6 rounded-lg hover:bg-sky-800">
+                New Application
+            </button>
+        </div>
+    </main>
+
+    <script>
+        let customerNameStored = "";
+        let loggedInEmp = "";
+
+        // Authorized Users List
+        const validUsers = {
+            "SBAH01": "Harish@123",
+            "SBAA02": "Anusha@123"
+        };
+
+        function handleLogin(event) {
+            if (event) event.preventDefault();
+            
+            let empIdInput = document.getElementById('empId').value.trim();
+            let empPassInput = document.getElementById('empPassword').value.trim();
+            
+            // Check credentials
+            if (!validUsers[empIdInput] || validUsers[empIdInput] !== empPassInput) {
+                alert("సరికాని ఎంప్లాయ్ ఐడీ లేదా పాస్‌వర్డ్! (Invalid ID or Password)");
+                return false;
+            }
+
+            loggedInEmp = empIdInput;
+            document.getElementById('loggedEmpDisplay').innerText = `Emp: ${loggedInEmp}`;
+            document.getElementById('hiddenEmpId').value = loggedInEmp;
+            
+            // Switch to Form Section
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            return false;
+        }
+
+        function handleFormSubmit(event) {
+            if (event) event.preventDefault();
+            customerNameStored = document.getElementById('appName').value;
+            
+            let form = document.getElementById('loanForm');
+            let formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).catch(error => console.log('Email dispatch error', error));
+
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            return false;
+        }
+
+        function goBackToForm() {
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
+            document.getElementById('formSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function proceedToQR() {
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
+            document.getElementById('qrSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function backToPaymentDetails() {
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function simulatePaymentSuccess() {
+            document.getElementById('successMessage').innerText = `Login Completed - ${customerNameStored}`;
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function logout() {
+            resetPortal();
+        }
+
+        function resetPortal() {
+            document.getElementById('loanForm').reset();
+            document.getElementById('loginForm').reset();
+            document.getElementById('successSection').classList.add('hidden');
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('paymentDetailsSection').classList.add('hidden');
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
