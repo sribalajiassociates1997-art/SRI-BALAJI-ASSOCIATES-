@@ -31,14 +31,14 @@
     </header>
 
     <main class="p-4">
-        <!-- Page 1: Employee Login Screen -->
+        <!-- Page 1: Employee Login Only -->
         <div id="loginScreen" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6">
             <div class="text-center space-y-2">
                 <div class="w-12 h-12 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center mx-auto text-xl">
                     <i class="fa-solid fa-user-tie"></i>
                 </div>
                 <h2 class="text-lg font-bold text-slate-800">Employee Login</h2>
-                <p class="text-xs text-slate-500">Enter your employee ID and password to continue</p>
+                <p class="text-xs text-slate-500">Enter your credentials to access portal</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -56,12 +56,12 @@
             </form>
         </div>
 
-        <!-- Page 2: Loan Application Form -->
+        <!-- Page 2: Loan Application Form with ONLY SUBMIT button -->
         <div id="formSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
                     <h2 class="text-lg font-bold text-slate-800">Loan Application Form</h2>
-                    <p class="text-xs text-slate-500">Fill in applicant and co-applicant details.</p>
+                    <p class="text-xs text-slate-500">Fill in applicant and co-applicant details</p>
                 </div>
                 <span id="loggedEmpDisplay" class="text-xs bg-sky-50 text-sky-800 px-2 py-1 rounded font-medium"></span>
             </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-700 mb-1">Applicant Aadhaar Number</label>
-                        <input type="text" id="appAadhaar" required maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="XXXX-XXXX-XXXX">
+                        <input type="text" id="appAadhaar" required maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter 12-digit Aadhaar">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-700 mb-1">Applicant PAN</label>
@@ -97,7 +97,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-700 mb-1">Co-Applicant Aadhaar Number</label>
-                        <input type="text" id="coAppAadhaar" maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="XXXX-XXXX-XXXX">
+                        <input type="text" id="coAppAadhaar" maxlength="12" class="w-full text-sm border rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 outline-none" placeholder="Enter 12-digit Aadhaar">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-700 mb-1">Co-Applicant PAN</label>
@@ -156,21 +156,22 @@
                     </div>
                 </div>
 
+                <!-- ONLY SUBMIT BUTTON HERE -->
                 <button type="submit" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
-                    Submit & Proceed to Payment Details <i class="fa-solid fa-arrow-right ml-1"></i>
+                    Submit <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
         </div>
 
-        <!-- Page 3: Payment Details & Corrections Preview -->
+        <!-- Page 3: Payment Details & Amount with CONTINUE button at last -->
         <div id="paymentDetailsSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">Payment & Fee Breakdown</h2>
-                    <p class="text-xs text-slate-500">Review details before generating payment QR</p>
+                    <h2 class="text-lg font-bold text-slate-800">Payment Details & Fee Breakdown</h2>
+                    <p class="text-xs text-slate-500">Review total payable amount</p>
                 </div>
                 <button onclick="goBackToForm()" class="text-xs text-sky-600 font-medium underline">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Make Corrections
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Form
                 </button>
             </div>
 
@@ -208,24 +209,24 @@
                 </div>
             </div>
 
+            <!-- CONTINUE BUTTON AT THE LAST OF PAGE 3 -->
             <button onclick="proceedToQR()" class="w-full bg-sky-700 text-white font-semibold py-3 rounded-lg hover:bg-sky-800 transition duration-200">
-                Continue to Generate QR Code <i class="fa-solid fa-qrcode ml-1"></i>
+                Continue <i class="fa-solid fa-arrow-right ml-1"></i>
             </button>
         </div>
 
-        <!-- Page 4: UPI QR Code Payment Screen -->
+        <!-- Page 4: UPI QR Code Scanner -->
         <div id="qrSection" class="app-card bg-white p-6 rounded-xl shadow-md space-y-6 hidden">
             <div class="border-b pb-3 flex justify-between items-center">
                 <div>
-                    <h2 class="text-lg font-bold text-slate-800">Scan & Pay</h2>
-                    <p class="text-xs text-slate-500">Complete payment via UPI scanner</p>
+                    <h2 class="text-lg font-bold text-slate-800">Payment Scanner</h2>
+                    <p class="text-xs text-slate-500">Scan QR code to complete payment</p>
                 </div>
                 <button onclick="backToPaymentDetails()" class="text-xs text-sky-600 underline">Back</button>
             </div>
 
-            <!-- Dynamic Payment Scanner -->
             <div class="text-center space-y-3 bg-sky-50 p-4 rounded-lg border border-sky-100">
-                <p class="text-xs font-medium text-slate-700">Scan QR Code to Pay via any UPI App</p>
+                <p class="text-xs font-medium text-slate-700">Scan QR Code via any UPI App</p>
                 <div class="inline-block bg-white p-3 rounded-lg shadow-sm">
                     <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9030055448@ybl&am=24188.82&tn=SriBalajiAssociatesLoanProcessing" alt="UPI QR Code" class="mx-auto w-36 h-36">
                 </div>
@@ -239,13 +240,13 @@
             </button>
         </div>
 
-        <!-- Success Screen -->
+        <!-- Page 5: Login Completed Generated Page -->
         <div id="successSection" class="app-card bg-white p-8 rounded-xl shadow-md text-center space-y-4 hidden">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <h2 id="successMessage" class="text-xl font-bold text-slate-800">Login Completed - Customer Name</h2>
-            <p class="text-xs text-slate-500">Your application has been successfully submitted and payment verified.</p>
+            <p class="text-xs text-slate-500">Application successfully submitted and payment verified.</p>
             <button onclick="resetPortal()" class="mt-4 bg-sky-700 text-white text-sm font-semibold py-2.5 px-6 rounded-lg hover:bg-sky-800">
                 New Application
             </button>
@@ -259,10 +260,9 @@
         function handleLogin(event) {
             event.preventDefault();
             loggedInEmp = document.getElementById('empId').value;
-            
             document.getElementById('loggedEmpDisplay').innerText = `Emp: ${loggedInEmp}`;
             
-            // Switch to Form Section (Page 2)
+            // Go to Page 2 (Form)
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('formSection').classList.remove('hidden');
             document.getElementById('logoutBtn').classList.remove('hidden');
@@ -273,7 +273,7 @@
             event.preventDefault();
             customerNameStored = document.getElementById('appName').value;
             
-            // Switch from Form to Payment Details Preview (Page 3)
+            // Go to Page 3 (Payment Details & Amount with Continue)
             document.getElementById('formSection').classList.add('hidden');
             document.getElementById('paymentDetailsSection').classList.remove('hidden');
             window.scrollTo(0, 0);
@@ -286,6 +286,7 @@
         }
 
         function proceedToQR() {
+            // Go to Page 4 (Scanner)
             document.getElementById('paymentDetailsSection').classList.add('hidden');
             document.getElementById('qrSection').classList.remove('hidden');
             window.scrollTo(0, 0);
@@ -298,6 +299,7 @@
         }
 
         function simulatePaymentSuccess() {
+            // Go to Page 5 (Login Completed Generated Page)
             document.getElementById('successMessage').innerText = `Login Completed - ${customerNameStored}`;
             
             document.getElementById('qrSection').classList.add('hidden');
